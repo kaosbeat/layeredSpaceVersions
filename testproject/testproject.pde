@@ -30,8 +30,8 @@ void setup() {
 
 void draw() {
   clear();
-  ps.run();
-  ps.addParticle();
+  ps.run(); //verplicht iedere frame
+  ps.addParticle(); ///naar eigen logic
 
 }
 
