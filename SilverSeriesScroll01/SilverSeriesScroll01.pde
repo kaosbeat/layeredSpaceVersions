@@ -10,7 +10,7 @@ NetAddress pureData;
 // SyphonServer server;
 
 
-PImage[] mountainImgs;
+PImage[] mountainImgs = new PImage[1];
 
 ParticleSystem mountains;
 ParticleSystem skys;
@@ -28,34 +28,45 @@ float globalscrollspeed;
 int count = 0;
 /*
 MidiBus myBus;
-int channel = 1;
-int pitch = 64;
-int velocity = 127;
-*/
+ int channel = 1;
+ int pitch = 64;
+ int velocity = 127;
+ */
 
 void setup() {
-  size(800, 800, P3D);
+  size(1920, 1080, P3D);
   MidiBus.list();
-  myBus = new MidiBus(this,"SLIDER/KNOB",0);
+  myBus = new MidiBus(this, "SLIDER/KNOB", 0);
   //String userHome = System.getProperty("user.home");
   //println(userHome);
   //println();
-  
+
   globalscrollspeed = 1.0;
-  
-  //for (int i = 0; i < fMountains.list().length; i++) {
-  //    mountainImgs[0] = loadImage("05-Mountains/"+fMountains.list()[i]);
-  //  }
-  File fSky = new File(dataPath(""), "/00-Sky/");
-  File fPlanets = new File(dataPath(""), "/02-Planets/");
+
+
+  //File fSkys = new File(dataPath(""), "/00-Sky/");
+  //File fPlanets = new File(dataPath(""), "/02-Planets/");
   File fMountains = new File(dataPath(""), "/05-Mountains/");
-  File fBackground = new File(dataPath(""), "/10-Background/");
-  File fForeground = new File(dataPath(""), "/20-Foreground/");
+  //File fBackgrounds = new File(dataPath(""), "/10-Background/");
+  //File fForegrounds = new File(dataPath(""), "/20-Foreground/");
+
+  for (int i = 0; i < fMountains.list().length; i++) {
+    //println("05-Mountains/"+fMountains.list()[i]);
+    PImage mountainImg = loadImage("05-Mountains/"+fMountains.list()[i]);
+    mountainImgs = (PImage[]) append(mountainImgs, mountainImg);
+
+    //
+}
   // particles
-  mountains = new ParticleSystem(new PVector(width, 0), "05-Mountains/", fMountains.list(),new PVector(-4, 0));  
-  skys = new ParticleSystem(new PVector(width, height/2), "00-Sky/", fSky.list(),new PVector(-2, 0));  
-  //mountains = new ParticleSystem(new PVector(width, 0), mountainImgs ,new PVector(-4, 0));
+  float scrollspeed = 1.0;
+  //skys = new ParticleSystem(new PVector(width, height/2), "00-Sky/", fSkys.list(), new PVector(-1*scrollspeed, 0));  
+  //planets = new ParticleSystem(new PVector(width, height/2), "02-Planets/", fPlanets.list(), new PVector(-2*scrollspeed, 0));  
+  //mountains = new ParticleSystem(new PVector(width, 0), "05-Mountains/", fMountains.list(), new PVector(-3*scrollspeed, 0));    
+  //backgrounds = new ParticleSystem(new PVector(width, height/2), "10-Background/", fBackgrounds.list(), new PVector(-4*scrollspeed, 0));  
+  //foregrounds = new ParticleSystem(new PVector(width, height/2), "20-Foreground/", fForegrounds.list(), new PVector(-5*scrollspeed, 0));  
   
+  mountains = new ParticleSystem(new PVector(width, 0), mountainImgs ,new PVector(-4, 0));
+
   // server = new SyphonServer(this, "de portables");
 }
 
@@ -66,14 +77,20 @@ void draw() {
   count++;
   clear();
 
-  if ( count % 100 == 0) {
-    mountains.addParticle(globalscrollspeed); ///naar eigen logic
-    skys.addParticle(globalscrollspeed);
+  if ( count % 300 == 0) {
+    mountains.addParticle(); ///naar eigen logic
+    //planets.addParticle();
+    //skys.addParticle();
+    //backgrounds.addParticle();
+    //foregrounds.addParticle();
   }
   /// draw lkayers in correct oprder (bottom first)
   mountains.run(); //verplicht iedere frame
-  skys.run();
-  
+  //planets.run();
+  //skys.run();
+  //backgrounds.run();
+  //foregrounds.run();
+
   // server.sendScreen();
 }
 
@@ -87,7 +104,6 @@ void controllerChange(ControlChange change) {
   println("Number:"+change.number());
   println("Value:"+change.value());
   globalscrollspeed = (change.value() / 64) + 0.2;
-  
 }
 
 
