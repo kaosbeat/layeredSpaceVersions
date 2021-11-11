@@ -8,6 +8,7 @@ OscP5 oscP5;
 NetAddress pureData;
 
 ParticleSystem mountains;
+ParticleSystem skys;
 
 
 import themidibus.*;
@@ -19,9 +20,6 @@ import java.io.*;
 > Discard image when out of view
 */
 
-PGraphics pg;
-PImage img; 
-
 float tilesX = 400;
 float tilesY = 5;
 float tileSizeX;
@@ -30,9 +28,6 @@ float tileSizeY;
 color c;
 float brightness;
 
-int imgX = width;
-int imgY = 0;
-int imgSpeed = 1;
 int count = 0;
 /*
 MidiBus myBus;
@@ -53,19 +48,10 @@ void setup() {
   println(userHome);
   println();
   File fMountains = new File(dataPath(""), "/05-Mountains/");
-  String[] listMountains = fMountains.list();
-  
-  pg = createGraphics(800, 800);
-  println(fMountains.list());
-  
-  img = loadImage(dataPath("")+ "/05-Mountains/" + listMountains[int(random(listMountains.length))]);
-  img.resize(800, 800);
-
-  tileSizeX = width/tilesX;
-  tileSizeY = width/tilesY;
-  
+  File fSky = new File(dataPath(""), "/00-Sky/");
   // particles
-  mountains = new ParticleSystem(new PVector(width/2, 50), "05-Mountains/", fMountains.list());  
+  mountains = new ParticleSystem(new PVector(width, 0), "05-Mountains/", fMountains.list(),new PVector(-4, 0));  
+  skys = new ParticleSystem(new PVector(width, height/2), "00-Sky/", fSky.list(),new PVector(-2, 0));  
 
 
 }
@@ -78,8 +64,10 @@ void draw() {
   count++;
   clear();
   mountains.run(); //verplicht iedere frame
+  skys.run();
   if ( count % 10 == 0) {
     mountains.addParticle(); ///naar eigen logic
+    skys.addParticle();
   }
   
   
