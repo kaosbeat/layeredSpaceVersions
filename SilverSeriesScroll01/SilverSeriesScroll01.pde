@@ -16,20 +16,10 @@ ParticleSystem skys;
 import themidibus.*;
 import java.io.*;
 
-/* NEXT STEPS
-> Make function or object of loading
-> Load more than one image
-> Discard image when out of view
-*/
-
-float tilesX = 400;
-float tilesY = 5;
-float tileSizeX;
-float tileSizeY;
 
 color c;
 float brightness;
-
+float globalscrollspeed;
 int count = 0;
 /*
 MidiBus myBus;
@@ -41,16 +31,18 @@ int velocity = 127;
 void setup() {
   size(800, 800, P3D);
   MidiBus.list();
-  myBus = new MidiBus(this, -1, "Bus 1");
-  String userHome = System.getProperty("user.home");
-  println(userHome);
-  println();
+  myBus = new MidiBus(this,"SLIDER/KNOB",0);
+  //String userHome = System.getProperty("user.home");
+  //println(userHome);
+  //println();
+  
+  globalscrollspeed = 1.0;
   File fMountains = new File(dataPath(""), "/05-Mountains/");
   File fSky = new File(dataPath(""), "/00-Sky/");
   // particles
   mountains = new ParticleSystem(new PVector(width, 0), "05-Mountains/", fMountains.list(),new PVector(-4, 0));  
   skys = new ParticleSystem(new PVector(width, height/2), "00-Sky/", fSky.list(),new PVector(-2, 0));  
-
+  
   server = new SyphonServer(this, "Processing Syphon");
 }
 
@@ -62,8 +54,8 @@ void draw() {
   clear();
 
   if ( count % 100 == 0) {
-    mountains.addParticle(); ///naar eigen logic
-    skys.addParticle();
+    mountains.addParticle(globalscrollspeed); ///naar eigen logic
+    skys.addParticle(globalscrollspeed);
   }
   /// draw lkayers in correct oprder (bottom first)
   mountains.run(); //verplicht iedere frame
@@ -71,6 +63,21 @@ void draw() {
   
   server.sendScreen();
 }
+
+
+void controllerChange(ControlChange change) {
+  // Receive a controllerChange
+  println();
+  println("Controller Change:");
+  println("--------");
+  println("Channel:"+change.channel());
+  println("Number:"+change.number());
+  println("Value:"+change.value());
+  globalscrollspeed = (change.value() / 64) + 0.2;
+  
+}
+
+
 
 void delay(int time) {
   int current = millis();
