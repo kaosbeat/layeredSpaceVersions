@@ -1,20 +1,22 @@
 import netP5.*;
 import oscP5.*;
-import codeanticode.syphon.*;
+// import codeanticode.syphon.*;
 import themidibus.*; //Import the library
 MidiBus myBus; // The MidiBus
 
 
 OscP5 oscP5;
 NetAddress pureData;
-SyphonServer server;
+// SyphonServer server;
 
 
 PImage[] mountainImgs;
 
 ParticleSystem mountains;
 ParticleSystem skys;
-
+ParticleSystem planets;
+ParticleSystem backgrounds;
+ParticleSystem foregrounds;
 
 import themidibus.*;
 import java.io.*;
@@ -40,18 +42,21 @@ void setup() {
   //println();
   
   globalscrollspeed = 1.0;
-  File fMountains = new File(dataPath(""), "/05-Mountains/");
-  for (int i = 0; i < fMountains.list().length; i++) {
-      mountainImgs = (PImage[]) append(mountainImgs, loadImage("05-Mountains/"+fMountains.list()[i]));
-    }
-    
-  //File fSky = new File(dataPath(""), "/00-Sky/");
-  // particles
-  //mountains = new ParticleSystem(new PVector(width, 0), "05-Mountains/", fMountains.list(),new PVector(-4, 0));  
-  //skys = new ParticleSystem(new PVector(width, height/2), "00-Sky/", fSky.list(),new PVector(-2, 0));  
-  mountains = new ParticleSystem(new PVector(width, 0), mountainImgs ,new PVector(-4, 0));
   
-  server = new SyphonServer(this, "de portables");
+  //for (int i = 0; i < fMountains.list().length; i++) {
+  //    mountainImgs[0] = loadImage("05-Mountains/"+fMountains.list()[i]);
+  //  }
+  File fSky = new File(dataPath(""), "/00-Sky/");
+  File fPlanets = new File(dataPath(""), "/02-Planets/");
+  File fMountains = new File(dataPath(""), "/05-Mountains/");
+  File fBackground = new File(dataPath(""), "/10-Background/");
+  File fForeground = new File(dataPath(""), "/20-Foreground/");
+  // particles
+  mountains = new ParticleSystem(new PVector(width, 0), "05-Mountains/", fMountains.list(),new PVector(-4, 0));  
+  skys = new ParticleSystem(new PVector(width, height/2), "00-Sky/", fSky.list(),new PVector(-2, 0));  
+  //mountains = new ParticleSystem(new PVector(width, 0), mountainImgs ,new PVector(-4, 0));
+  
+  // server = new SyphonServer(this, "de portables");
 }
 
 void draw() {
@@ -63,13 +68,13 @@ void draw() {
 
   if ( count % 100 == 0) {
     mountains.addParticle(globalscrollspeed); ///naar eigen logic
-    //skys.addParticle(globalscrollspeed);
+    skys.addParticle(globalscrollspeed);
   }
   /// draw lkayers in correct oprder (bottom first)
   mountains.run(); //verplicht iedere frame
-  //skys.run();
+  skys.run();
   
-  server.sendScreen();
+  // server.sendScreen();
 }
 
 
