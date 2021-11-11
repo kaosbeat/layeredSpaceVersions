@@ -6,14 +6,18 @@ class ParticleSystem {
   PVector origin, pspeed;
   StringList sprites;
   PImage[] imgs;
-  
+
   //ParticleSystem(PVector position, String path, String[] spriteList, PVector speed) {
-    ParticleSystem(PVector position, PImage[] imgList, PVector speed) {
+  ParticleSystem(PVector position, PImage[] imgList, PVector speed, String systype) {
     //sprites = new StringList();
     imgs = imgList;
     origin = position.copy();
     particles = new ArrayList<Particle>();
     pspeed = speed.copy();
+    if (systype == "planet") {
+      pspeed.x = pspeed.x - random(10);
+      pspeed.y = pspeed.y + random(10)/20;
+    }
     //for (int i = 0; i < spriteList.length; i++) {
     //  sprites.append(path+spriteList[i]);
     //}
@@ -22,17 +26,19 @@ class ParticleSystem {
   void addParticle() {
     PVector speed = new PVector(pspeed.x * 1, pspeed.y);
     //particles.add(new Particle(origin, sprites, speed));
-    int rx = int(random(0, imgs.length));
+    int rx = int(random(0, imgs.length-1));
     PImage img = imgs[rx];
     particles.add(new Particle(origin, img, speed));
   }
 
   void run() {
-    for (int i = particles.size()-1; i >= 0; i--) {
-      Particle p = particles.get(i);
-      p.run();
-      if (p.isDead()) {
-        particles.remove(i);
+    if (particles.size() > 0) {
+      for (int i = particles.size()-1; i >= 0; i--) {
+        Particle p = particles.get(i);
+        p.run();
+        if (p.isDead()) {
+          particles.remove(i);
+        }
       }
     }
   }
@@ -51,7 +57,7 @@ class Particle {
 
 
   //Particle(PVector l,StringList sprites, PVector speed) {
-      Particle(PVector l,PImage sprite, PVector speed) {
+  Particle(PVector l, PImage sprite, PVector speed) {
     //imgs = sprites;
     img = sprite;
     acceleration = new PVector(0, 0);
@@ -81,17 +87,24 @@ class Particle {
     //fill(255, lifespan);
     //ellipse(position.x, position.y, 8, 8);
     //tint(255,lifespan);
-    image(img,position.x, position.y);
-  }
+    //println(img);
+    if (img != null) {
+      image(img, position.x, position.y);
+    }
+  }  
 
   // Is the particle still useful?
   boolean isDead() {
-    //if (lifespan < 0.0) {
-     if (position.x + img.width < 0) {
-       println(position.x);
-      return true;
+    if (img != null) {
+      //if (lifespan < 0.0) {
+      if (position.x + img.width < 0) {
+        //println(position.x);
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      return true;
     }
   }
 }
