@@ -1,13 +1,13 @@
 import netP5.*;
 import oscP5.*;
-// import codeanticode.syphon.*;
+ import codeanticode.syphon.*;
 import themidibus.*; //Import the library
 MidiBus myBus; // The MidiBus
 
 
 OscP5 oscP5;
 NetAddress pureData;
-// SyphonServer server;
+ SyphonServer server;
 
 PImage[] planetImgs = new PImage[1];
 PImage[] skyImgs = new PImage[1];
@@ -85,11 +85,11 @@ void setup() {
   }
   // particles
   float scrollspeed = 0.2;
-  skys = new ParticleSystem(new PVector(width, 0), skyImgs, new PVector(-1*scrollspeed, 0), "sky" );  
+  skys = new ParticleSystem(new PVector(0, 0), skyImgs, new PVector(-1*scrollspeed, 0), "sky" );  
   planets = new ParticleSystem(new PVector(width, 0), planetImgs, new PVector(-2*scrollspeed, 0), "planet");  
-  mountains = new ParticleSystem(new PVector(width, 0), mountainImgs, new PVector(-4, 0), "mountain");
-  backgrounds = new ParticleSystem(new PVector(width, 0), backgroundImgs, new PVector(-4*scrollspeed, 0), "");  
-  foregrounds = new ParticleSystem(new PVector(width, height/2), foregroundImgs, new PVector(-5*scrollspeed, 0), "");  
+  mountains = new ParticleSystem(new PVector(width, 0), mountainImgs, new PVector(-3*scrollspeed, 0), "mountain");
+  backgrounds = new ParticleSystem(new PVector(width, 0), backgroundImgs, new PVector(-4*scrollspeed, 0), "background");  
+  foregrounds = new ParticleSystem(new PVector(width, 0), foregroundImgs, new PVector(-5*scrollspeed, 0), "foreground");  
 
 
   skys.addParticle();
@@ -97,7 +97,7 @@ void setup() {
   mountains.addParticle(); ///naar eigen logic
   backgrounds.addParticle();
   foregrounds.addParticle();
-  // server = new SyphonServer(this, "de portables");
+   server = new SyphonServer(this, "de portables");
 }
 
 void draw() {
@@ -107,11 +107,19 @@ void draw() {
   count++;
   clear();
 
-  if ( count % 300 == 0) {
-    mountains.addParticle(); ///naar eigen logic
-    planets.addParticle();
+  if ( count % 400 == 0) {
     skys.addParticle();
+  } 
+  if ( count % 200 == 0) {
+    planets.addParticle();
+  } 
+  if ( count % 800 == 0) {
+    mountains.addParticle();
+  } 
+  if ( count % 300 == 0) {
     backgrounds.addParticle();
+  } 
+  if ( count % 300 == 0) {
     foregrounds.addParticle();
   }
   /// draw lkayers in correct oprder (bottom first)
@@ -122,7 +130,7 @@ void draw() {
   backgrounds.run();
   foregrounds.run();
 
-  // server.sendScreen();
+   server.sendScreen();
 }
 
 
