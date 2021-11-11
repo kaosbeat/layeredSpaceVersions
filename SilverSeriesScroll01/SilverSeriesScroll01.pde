@@ -40,13 +40,13 @@ void setup() {
   String userHome = System.getProperty("user.home");
   println(userHome);
   println();
-  File fMountains = new File(dataPath(""), "/Mountains/");
+  File fMountains = new File(dataPath(""), "/05-Mountains/");
   String[] listMountains = fMountains.list();
   
   pg = createGraphics(800, 800);
   println(fMountains.list());
   
-  img = loadImage(dataPath("")+ "/Mountains/" + listMountains[int(random(listMountains.length))]);
+  img = loadImage(dataPath("")+ "/05-Mountains/" + listMountains[int(random(listMountains.length))]);
   img.resize(800, 800);
 
   tileSizeX = width/tilesX;
