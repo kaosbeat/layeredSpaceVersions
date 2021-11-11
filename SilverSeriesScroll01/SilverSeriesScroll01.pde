@@ -65,7 +65,7 @@ void draw() {
   clear();
   mountains.run(); //verplicht iedere frame
   skys.run();
-  if ( count % 10 == 0) {
+  if ( count % 100 == 0) {
     mountains.addParticle(); ///naar eigen logic
     skys.addParticle();
   }
